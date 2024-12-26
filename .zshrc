@@ -1,23 +1,71 @@
-# Alias for python venv
-alias activate-venv='source ./venv/bin/activate' 
+# alias terraform
+alias tf='terraform'
 
-# Alias for ngrok
-alias ngrok='~/Programs/ngrok'
+# alias git
+alias g='git'
+
+# alias zoxide
+alias cd='z'
+
+# alias move to ~/Tasks/fluct_funnel/
+alias cdfn='cd ~/Tasks/fluct_funnel/'
+
+# alias move to ~/Tasks/
+alias cdtsk='cd ~/Tasks/'
+
+# alias for clear terminal
+alias cl='clear'
+
+# packer fmt recursive alias
+alias pkrfmt='packer fmt --recursive .'
+
+# Terraform fmt recursive alias
+alias tffmt='terraform fmt -recursive'
+
+# AWS CLI ASSUME ROLE TTL
+export AWS_ASSUME_ROLE_TTL=1h
+
+# translate 英→日
+function e2j(){
+  [ $# -ge 2 ] && command trans {en=ja} "$*"
+  [ $# -eq 1 ] && command trans {en=ja} $1 || echo "No arguments."
+}
+# translate 日→英
+function j2e(){
+  [ $# -ge 2 ] && command trans {ja=en} "$*"
+  [ $# -eq 1 ] && command trans {ja=en} $1 || echo "引数がありません。"
+}
+
+# for zsh with homebrew
+if type brew &>/dev/null; then
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+    autoload -Uz compinit
+    compinit
+fi
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Completion for GitHub CLI
+eval "$(gh completion -s zsh)"
+
+# System Environment for nodebrew
+export PATH=$HOME/.nodebrew/current/bin:$PATH
+
+# System Environment for my bin
+export PATH=$HOME/bin:$PATH
+
+# Alias for trivy
+alias trivy='docker run -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy:0.50.1'
 
 # Laravel sail
 alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
-alias m='sail artisan migrate:fresh --seed --force'
-alias c='sail composer dump-autoload' 
-alias olsinit='sail artisan migrate:fresh && sail artisan db:seed PermissionSeeder && sail artisan db:seed PermissionUserSeeder && sail artisan db:seed CourseFolderSeeder'
 
-# Docker KIT off
-export DOCKER_BUILDKIT=0
-
-# AtCoder
-alias atc='python3 $1 < sample.txt > output.txt'
-
-# エイリアス
-alias python="python3"
+# Alias for NeoVim
 alias vi="nvim"
 alias vim="nvim"
 alias view="vim -R"
@@ -124,7 +172,7 @@ setopt extended_glob
 # ^R で履歴検索をするときに * でワイルドカードを使用出来るようにする
 bindkey '^R' history-incremental-pattern-search-backward
 
-# エイリアス
+# シェルエイリアス
 alias la='ls -a'
 alias ll='ls -l'
 
@@ -159,10 +207,51 @@ case ${OSTYPE} in
     darwin*)
         #Mac用の設定
         export CLICOLOR=1
-        alias ls='ls -G -F'
+        alias ls='eza -h -G -F --git'
         ;;
     linux*)
         #Linux用の設定
         alias ls='ls -F --color=auto'
         ;;
 esac
+
+# System Environment for pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/shims:$PATH"
+eval "$(pyenv init -)"
+
+# System Environment for rbenv
+export RBENV_PATH="$HOME/.rbenv"
+export PATH="$RBENV_PATH/bin:$PATH"
+eval "$(rbenv init -)"
+
+# System Environment for goenv
+export GOENV_ROOT="$HOME/.goenv"
+export PATH="$GOENV_ROOT/bin:$PATH"
+eval "$(goenv init -)"
+
+# Alias for Python
+alias activate-venv='source ./venv/bin/activate'
+
+# for powerlevel10k
+source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+autoload -U +X bashcompinit && bashcompinit
+
+# Terraform Autocomplete
+complete -o nospace -C /opt/homebrew/Cellar/tfenv/3.0.0/versions/1.3.7/terraform terraform
+
+# Rust
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# zlib path
+export LDFLAGS="-L/opt/homebrew/opt/zlib/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/zlib/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/zlib/lib/pkgconfig"
+
+# zoxide
+eval "$(zoxide init zsh)"
+

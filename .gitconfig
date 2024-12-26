@@ -1,0 +1,39 @@
+[user]
+	email = ca02298@cartahd.com
+	name = Taipoon
+
+[alias]
+	delete-merged-branch = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|main'|xargs git branch -d; };f"
+	d = diff
+	su = status
+	b = branch
+	co = checkout
+	pl = pull
+	ps = push
+	a = add
+	aa = add -A
+	cm = commit -m
+	# 現在いるブランチ名を取得してpushする
+	ps = "!git push origin $(git rev-parse --abbrev-ref @)"
+	# cp = cherry-pick
+	# Gitのコミットログをグラフで表示する
+	ll = log --graph --date=relative --name-status --abbrev-commit
+	# Gitのコミットログをグラフで表示する(シンプルに)
+	sl = log --graph --oneline --date=relative --abbrev-commit
+	df = difftool -y
+	mt = mergetool -y
+	cleanup-branches = "!f() { \n  git checkout master &&\n  git pull origin master &&\n  for branch in $(git branch --merged master | grep -v \"\\* master\"); do\n    git checkout \"$branch\" &&\n    if git merge-base --is-ancestor \"$branch\" master; then\n      echo \"Deleting branch $branch (squash merge detected)\" &&\n      git branch -d \"$branch\" &&\n      git push origin --delete \"$branch\";\n    else\n      echo \"Branch $branch is not fully merged into master.\";\n    fi\n  done &&\n  git checkout master;\n}; f"
+	pullm = "!/Users/ca02298/.gitsh/git_auto_pull.sh"
+	cleanup-local = "!/Users/ca02298/.gitsh/delete_merged_local_branches.sh"
+
+[pull]
+	rebase = false
+[core]
+	autocrlf = input
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[http]
+	postBuffer = 524288000
